@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from '_post_card.html' import post_card %}
+{% from '_pagination.html' import render_pagination %}
+
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3">
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <h1>{{ user.username }}</h1>
+            {% if user.about_me %}<p class="mb-1">{{ user.about_me }}</p>{% endif %}
+            <p class="text-muted small mb-0">Member since {{ user.member_since.strftime('%B %Y') }}</p>
+        </div>
+        {% if current_user.is_authenticated and current_user.id == user.id %}
+        <a href="{{ url_for('auth.edit_profile') }}" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
+        {% endif %}
+    </div>
+</div>
+
+<h2 class="mb-3">Posts by {{ user.username }} ({{ posts.total }})</h2>
+{% if posts.items %}
+    {% for post in posts.items %}
+        {{ post_card(post) }}
+    {% endfor %}
+    {{ render_pagination(posts, 'auth.profile', username=user.username) }}
+{% else %}
+    <p class="text-muted">No posts yet.</p>
+{% endif %}
+{% endblock %}
