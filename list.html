@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% from '_post_card.html' import post_card %}
+{% from '_pagination.html' import render_pagination %}
+
+{% block content %}
+<h1 class="mb-4">📚 All Blog Posts</h1>
+{% if posts.items %}
+    {% for post in posts.items %}
+        {{ post_card(post) }}
+    {% endfor %}
+    {{ render_pagination(posts, 'posts.list_posts') }}
+{% else %}
+    <p class="text-muted">No posts yet.</p>
+{% endif %}
+{% endblock %}

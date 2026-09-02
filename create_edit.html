@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="mb-4">{{ 'Edit Post' if post else 'Write a New Post' }}</h1>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+        {% for error in form.title.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.summary.label(class="form-label") }}
+        {{ form.summary(class="form-control" + (" is-invalid" if form.summary.errors else ""), placeholder="A short teaser shown in post listings") }}
+        {% for error in form.summary.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-select") }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.tags.label(class="form-label") }}
+            {{ form.tags(class="form-control", placeholder="flask, python, tutorial") }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form.image.label(class="form-label") }}
+        {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+        {% for error in form.image.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        {% if post and post.image_filename %}
+        <img src="{{ url_for('static', filename='images/uploads/' + post.image_filename) }}" class="img-thumbnail mt-2" style="max-height:150px;">
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else ""), id="content-editor", rows=12) }}
+        {% for error in form.content.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        <div class="form-text">Basic HTML tags (e.g. &lt;b&gt;, &lt;i&gt;, &lt;a&gt;) are supported for rich formatting.</div>
+    </div>
+
+    <div class="mb-3 form-check">
+        {{ form.published(class="form-check-input") }}
+        {{ form.published.label(class="form-check-label") }}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Lightweight formatting toolbar for the content textarea (simple rich-text helper).
+    document.addEventListener('DOMContentLoaded', function () {
+        const editor = document.getElementById('content-editor');
+        if (!editor) return;
+        const toolbar = document.createElement('div');
+        toolbar.className = 'btn-toolbar mb-2';
+        const buttons = [
+            { label: 'B', tagOpen: '<b>', tagClose: '</b>' },
+            { label: 'I', tagOpen: '<i>', tagClose: '</i>' },
+            { label: 'Link', tagOpen: '<a href="">', tagClose: '</a>' },
+            { label: 'H2', tagOpen: '<h2>', tagClose: '</h2>' },
+            { label: 'Quote', tagOpen: '<blockquote>', tagClose: '</blockquote>' }
+        ];
+        buttons.forEach(function (btn) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'btn btn-sm btn-outline-secondary me-1';
+            b.innerText = btn.label;
+            b.onclick = function () {
+                const start = editor.selectionStart, end = editor.selectionEnd;
+                const selected = editor.value.substring(start, end);
+                editor.value = editor.value.substring(0, start) + btn.tagOpen + selected + btn.tagClose + editor.value.substring(end);
+                editor.focus();
+            };
+            toolbar.appendChild(b);
+        });
+        editor.parentNode.insertBefore(toolbar, editor);
+    });
+</script>
+{% endblock %}
