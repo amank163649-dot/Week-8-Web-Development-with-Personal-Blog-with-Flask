@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from '_post_card.html' import post_card %}
+{% from '_pagination.html' import render_pagination %}
+
+{% block content %}
+<h2 class="mb-4">🔍 Search Results {% if query %}for "{{ query }}"{% endif %}</h2>
+
+{% if not query %}
+    <p class="text-muted">Enter a search term above to find posts.</p>
+{% elif posts and posts.items %}
+    {% for post in posts.items %}
+        {{ post_card(post) }}
+    {% endfor %}
+    {{ render_pagination(posts, 'main.search', q=query) }}
+{% else %}
+    <p class="text-muted">No posts found matching "{{ query }}".</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4">About This Blog</h1>
+        <p>Welcome! This is a personal blog built with <strong>Flask</strong>, demonstrating a full-featured
+           web application with user authentication, blog post management, and a commenting system.</p>
+        <p>This project was built to practice:</p>
+        <ul>
+            <li>Flask application factory pattern & blueprints</li>
+            <li>SQLAlchemy models and relationships</li>
+            <li>Secure authentication with Flask-Login</li>
+            <li>Jinja2 templating and Bootstrap-based responsive design</li>
+            <li>Form handling and validation with Flask-WTF</li>
+        </ul>
+        <p>Feel free to <a href="{{ url_for('auth.register') }}">register an account</a> and start writing!</p>
+    </div>
+</div>
+{% endblock %}

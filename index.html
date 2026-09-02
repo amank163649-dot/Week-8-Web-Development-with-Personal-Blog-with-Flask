@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% from '_post_card.html' import post_card %}
+{% from '_pagination.html' import render_pagination %}
+
+{% block content %}
+<div class="p-4 mb-4 bg-light rounded-3 text-center">
+    <h1 class="display-6">🌟 Welcome to My Personal Blog</h1>
+    <p class="lead">Thoughts on web development, Python, and everything in between.</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <h2 class="mb-3">📝 Recent Posts</h2>
+        {% if posts.items %}
+            {% for post in posts.items %}
+                {{ post_card(post) }}
+            {% endfor %}
+            {{ render_pagination(posts, 'main.index') }}
+        {% else %}
+            <p class="text-muted">No posts yet. Be the first to <a href="{{ url_for('posts.create') }}">write one</a>!</p>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">📂 Categories</div>
+            <ul class="list-group list-group-flush">
+                {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('main.index', category=category.id) }}">{{ category.name }}</a>
+                    <span class="badge bg-primary rounded-pill">{{ category.posts.count() }}</span>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted">No categories yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">📊 Blog Statistics</div>
+            <div class="card-body">
+                <p class="mb-1">Total Posts: <strong>{{ stats.total_posts }}</strong></p>
+                <p class="mb-0">Registered Users: <strong>{{ stats.total_users }}</strong></p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">📬 Subscribe</div>
+            <div class="card-body">
+                <p class="text-muted small">Get new posts via RSS.</p>
+                <a href="{{ url_for('main.rss_feed') }}" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="bi bi-rss"></i> Subscribe to RSS Feed
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

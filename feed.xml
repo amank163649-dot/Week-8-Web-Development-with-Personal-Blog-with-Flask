@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>My Personal Blog</title>
+  <link>{{ url_for('main.index', _external=True) }}</link>
+  <description>Latest posts from My Personal Blog</description>
+  {% for post in posts %}
+  <item>
+    <title>{{ post.title }}</title>
+    <link>{{ url_for('posts.detail', post_id=post.id, _external=True) }}</link>
+    <guid>{{ url_for('posts.detail', post_id=post.id, _external=True) }}</guid>
+    <pubDate>{{ post.timestamp.strftime('%a, %d %b %Y %H:%M:%S GMT') }}</pubDate>
+    <description>{{ (post.summary or post.content) | striptags | truncate(300) }}</description>
+  </item>
+  {% endfor %}
+</channel>
+</rss>
