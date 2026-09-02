@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-bp = Blueprint('comments', __name__)
+bp = Blueprint('main', __name__)
 
-from app.comments import routes  # noqa: E402,F401
+from app.main import routes  # noqa: E402,F401

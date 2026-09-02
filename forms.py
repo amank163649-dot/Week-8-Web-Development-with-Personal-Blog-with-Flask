@@ -1,9 +1,18 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, SubmitField, HiddenField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, TextAreaField, SubmitField
+from wtforms.validators import DataRequired, Email, Length
 
 
-class CommentForm(FlaskForm):
-    content = TextAreaField('Comment', validators=[DataRequired(), Length(min=1, max=1000)])
-    parent_id = HiddenField('Parent Comment')
-    submit = SubmitField('Post Comment')
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(max=100)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    message = TextAreaField('Message', validators=[DataRequired(), Length(max=1000)])
+    submit = SubmitField('Send Message')
+
+
+class SearchForm(FlaskForm):
+    class Meta:
+        csrf = False  # search form is submitted via GET
+
+    query = StringField('Search', validators=[DataRequired()])
+    submit = SubmitField('Search')
